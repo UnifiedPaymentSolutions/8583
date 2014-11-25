@@ -90,6 +90,10 @@ module ISO8583
       bmp = message.unpack("B64")[0]
       if bmp[0,1] == "1"
         bmp = message.unpack("B128")[0]
+
+        # Clear the bit signifying presence of second bitmap
+        # as we don't want to see it when iterating over fields
+        bmp[0,1] = "0"
       end
 
       0.upto(bmp.length-1) do |i|
