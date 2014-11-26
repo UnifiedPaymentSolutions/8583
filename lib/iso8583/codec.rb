@@ -195,5 +195,7 @@ module ISO8583
   HhmmssCodec       = _date_codec("%H%M%S")
   YYMMDDhhmmssCodec = _date_codec("%y%m%d%H%M%S")
   YYMMCodec         = _date_codec("%y%m")
+  MMDDCodec         = _date_codec("%m%d")
+  YYMMDDCodec       = _date_codec("%y%m%d")
 
 end
