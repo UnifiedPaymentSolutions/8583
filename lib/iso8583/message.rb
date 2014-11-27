@@ -360,7 +360,14 @@ module ISO8583
       # mti_name => mti_value
       #
       def _mti_definitions
-        [@mtis_v, @mtis_n]
+        if superclass.respond_to?(:_mti_definitions)
+          result = superclass._mti_definitions
+
+          [ (result[0] || {}).merge(@mtis_v || {}),
+            (result[1] || {}).merge(@mtis_n || {}) ]
+        else
+          [ @mtis_v || {}, @mtis_n || {} ]
+        end
       end
       
       # Access the field definitions of this class, this is a
@@ -368,12 +375,16 @@ module ISO8583
       # pairs.
       #
       def _definitions
-        @defs
+        if superclass.respond_to?(:_definitions)
+          (superclass._definitions || {}).merge(@defs || {})
+        else
+          @defs || {}
+        end
       end
 
       # Returns the field definition to format the mti.
       def _mti_format
-        @mti_format
+        @mti_format || (superclass.respond_to?(:_mti_format) ? superclass._mti_format : nil)
       end
 
 
