@@ -91,6 +91,23 @@ module ISO8583
     raw.to_i
   }
 
+  ASCII_SignedNumber = Codec.new
+  ASCII_SignedNumber.encoder= lambda{|num|
+    enc = "%016i" % num
+    raise ISO8583Exception.new("Invalid value: #{enc} must be numeric!") unless enc =~ /\A[0-9]*\z/
+    raise ISO8583Exception.new("Invalid value: #{enc} must be 16 digits") if enc.length != 16
+    num < 0 ? "C#{enc}" : "D#{enc}"
+  }
+
+  ASCII_SignedNumber.decoder = lambda{|raw|
+    case raw[0]
+    when 'C'; -Integer(raw[1..-1].sub(/\A0+/, ''))
+    when 'D';  Integer(raw[1..-1].sub(/\A0+/, ''))
+    else
+      raise ISO8583Exception.new("Invalid value: #{raw}, missing C/D prefix!")
+    end
+  }
+
   PASS_THROUGH_DECODER = lambda{|str|
     str.strip # remove padding
   }

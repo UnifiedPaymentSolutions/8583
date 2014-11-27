@@ -177,4 +177,8 @@ module ISO8583
   Hhmmss.codec  = HhmmssCodec
   Hhmmss.length = 6
 
+  X_N16        = Field.new
+  X_N16.length = 17
+  X_N16.codec  = ASCII_SignedNumber
+
 end
