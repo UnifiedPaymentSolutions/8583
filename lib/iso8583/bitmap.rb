@@ -17,16 +17,14 @@ module ISO8583
     # not, this initializes and empty bitmap.
     def initialize(message = nil)
       @bmp = Array.new(128, false)
-      if !message
-
-      else
+      if message
         initialize_from_message message
       end
     end
     
     # yield once with the number of each set field.
     def each #:yields: each bit set in the bitmap.
-      @bmp.each_with_index {|set, i| yield i+1 if set}
+      @bmp.each_with_index {|set, i| yield i+1 if set && i != 0}
     end
     
     # Returns whether the bit is set or not.
@@ -37,7 +35,7 @@ module ISO8583
     # Set the bit to the indicated value. Only `true` sets the
     # bit, any other value unsets it.
     def []=(i, value)
-      if i > 128 
+      if i > 128
         raise ISO8583Exception.new("Bits > 128 are not permitted.")
       elsif i < 2
         raise ISO8583Exception.new("Bits < 2 are not permitted (continutation bit is set automatically)")
@@ -58,26 +56,27 @@ module ISO8583
     # Generate the bytes representing this bitmap.
     def to_bytes
       arr = [self.to_s]
-      # tricky and ugly, setting bit[1] only when generating to_s...
-      count = self[1] ? 128 : 64
-      arr.pack("B#{count}")
+      arr.pack("B*")
     end
     alias_method :to_b, :to_bytes
 
     # Generate a String representation of this bitmap in the form:
     #	01001100110000011010110110010100100110011000001101011011001010
     def to_s
+      second_bitmap_used = false
+
       #check whether any `high` bits are set
-      @bmp[0] = false
       65.upto(128) {|i|
         if self[i]
           # if so, set continuation bit
-          @bmp[0] = true
+          second_bitmap_used = true
           break
         end
       }
-      str = ""
-      1.upto(self[1] ? 128 : 64) {|i|
+
+      str = second_bitmap_used ? "1" : "0"
+
+      2.upto(second_bitmap_used ? 128 : 64) {|i|
         str << (self[i] ? "1" : "0")
       }
       str
@@ -90,10 +89,6 @@ module ISO8583
       bmp = message.unpack("B64")[0]
       if bmp[0,1] == "1"
         bmp = message.unpack("B128")[0]
-
-        # Clear the bit signifying presence of second bitmap
-        # as we don't want to see it when iterating over fields
-        bmp[0,1] = "0"
       end
 
       0.upto(bmp.length-1) do |i|
