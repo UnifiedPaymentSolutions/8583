@@ -100,9 +100,10 @@ module ISO8583
   }
 
   ASCII_SignedNumber.decoder = lambda{|raw|
+    num = Integer(raw[1..-1][/\A0*(([^0].*)|0\z)\z/, 1])
     case raw[0]
-    when 'C'; -Integer(raw[1..-1].sub(/\A0+/, ''))
-    when 'D';  Integer(raw[1..-1].sub(/\A0+/, ''))
+    when 'C'; -num
+    when 'D';  num
     else
       raise ISO8583Exception.new("Invalid value: #{raw}, missing C/D prefix!")
     end
