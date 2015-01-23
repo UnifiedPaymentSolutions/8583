@@ -180,6 +180,14 @@ module ISO8583
   }
   Track2.decoder = PASS_THROUGH_DECODER
 
+  def self.do_time_parsing(&block)
+    if Time.respond_to?(:use_zone)
+      Time.use_zone("Europe/Tallinn", &block)
+    else
+      block.call
+    end
+  end
+
   def self._date_codec(fmt) 
     c = Codec.new
     c.encoder = lambda {|date|
@@ -188,8 +196,10 @@ module ISO8583
               date.strftime(fmt)
             when String
               begin
-                dt = DateTime.strptime(date, fmt)
-                dt.strftime(fmt)
+                do_time_parsing do
+                  dt = DateTime.strptime(date, fmt)
+                  dt.strftime(fmt)
+                end
               rescue
                 raise ISO8583Exception.new("Invalid format encoding: #{date}, must be #{fmt}.")
               end
@@ -200,7 +210,7 @@ module ISO8583
     }
     c.decoder = lambda {|str|
       begin
-        DateTime.strptime(str, fmt)
+        do_time_parsing { DateTime.strptime(str, fmt) }
       rescue
         raise ISO8583Exception.new("Invalid format decoding: #{str}, must be #{fmt}.")
       end
