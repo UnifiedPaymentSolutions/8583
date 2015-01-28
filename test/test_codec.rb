@@ -123,4 +123,12 @@ class FieldTest < Test::Unit::TestCase
       dt = Packed_Number.encode "F"
     }
   end
+
+  def test_ascii_signed_number
+    assert_equal "D0000000000000000", ASCII_SignedNumber.encode(0)
+    assert_equal "D0000000000000001", ASCII_SignedNumber.encode(1)
+    assert_equal "C0000000000000001", ASCII_SignedNumber.encode(-1)
+    assert_equal "D1234567890123456", ASCII_SignedNumber.encode(1234567890123456)
+    assert_equal "C1234567890123456", ASCII_SignedNumber.encode(-1234567890123456)
+  end
 end

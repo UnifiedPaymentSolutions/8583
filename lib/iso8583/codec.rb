@@ -94,7 +94,7 @@ module ISO8583
 
   ASCII_SignedNumber = Codec.new
   ASCII_SignedNumber.encoder= lambda{|num|
-    enc = "%016i" % num
+    enc = "%016i" % num.abs
     raise ISO8583Exception.new("Invalid value: #{enc} must be numeric!") unless enc =~ /\A[0-9]*\z/
     raise ISO8583Exception.new("Invalid value: #{enc} must be 16 digits") if enc.length != 16
     num < 0 ? "C#{enc}" : "D#{enc}"
