@@ -1,3 +1,5 @@
+# encoding: ASCII-8BIT
+
 require 'test/unit'
 require 'lib/iso8583'
 

@@ -1,3 +1,4 @@
+# encoding: ASCII-8BIT
 module ISO8583
 
   class Field

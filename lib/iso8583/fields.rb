@@ -1,3 +1,4 @@
+# encoding: ASCII-8BIT
 #--
 # Copyright 2009 by Tim Becker (tim.becker@kuriostaet.de)
 # MIT License, for details, see the LICENSE file accompaning
