@@ -38,6 +38,10 @@ module ISO8583
   # [+YYMM+]         Expiration Date, formatted as named in ASCII numerals
   # [+Hhmmss+]       Date, formatted in ASCII hhmmss
 
+  def self.format_zero_padded_number(value, length)
+    int_value = value.kind_of?(Integer) ? value : Integer(value.to_s[/\A0*(([^0].*)|0)\z/, 1])
+    sprintf("%0#{Integer(length)}d", int_value)
+  end
 
   # Special form to de/encode variable length indicators, two bytes ASCII numerals 
   LL         = Field.new
@@ -45,7 +49,7 @@ module ISO8583
   LL.length  = 2
   LL.codec   = ASCII_Number
   LL.padding = lambda {|value|
-    sprintf("%02d", value)
+    format_zero_padded_number(value, 2)
   }
   # Special form to de/encode variable length indicators, three bytes ASCII numerals
   LLL         = Field.new
@@ -53,7 +57,7 @@ module ISO8583
   LLL.length  = 3
   LLL.codec   = ASCII_Number
   LLL.padding = lambda {|value|
-    sprintf("%03d", value)
+    format_zero_padded_number(value, 3)
   }
 
   LL_BCD        = BCDField.new
@@ -110,7 +114,7 @@ module ISO8583
   N = Field.new
   N.codec = ASCII_Number
   N.padding = lambda {|val, len|
-    sprintf("%0#{len}d", val)
+    format_zero_padded_number(val, len)
   }
 
   N_BCD = BCDField.new

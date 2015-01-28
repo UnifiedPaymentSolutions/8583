@@ -23,7 +23,10 @@ class FieldTest < Test::Unit::TestCase
     
     enc = LLL.encode 12
     assert_equal "\x30\x31\x32", enc
-    
+
+    enc = LLL.encode "080"
+    assert_equal "\x30\x38\x30", enc
+
     #enc = LLL.encode "012"
     #assert_equal "\x30\x31\x32", enc
 
