@@ -182,10 +182,21 @@ module ISO8583
   Track2.decoder = PASS_THROUGH_DECODER
 
   def self.do_time_parsing(&block)
-    if Time.respond_to?(:use_zone)
-      Time.use_zone("Europe/Tallinn", &block)
+    if Time.respond_to?(:zone)
+      dt = block.call # DateTime returned here lacks zone info but can be assumed to be in +0200
+      Time.use_zone("Europe/Tallinn") do
+        Time.zone.local(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
+      end
     else
       block.call
+    end
+  end
+
+  def self.do_time_zone_conversion(datetime)
+    if datetime.respond_to?(:in_time_zone)
+      datetime.in_time_zone("Europe/Tallinn")
+    else
+      datetime
     end
   end
 
@@ -194,13 +205,12 @@ module ISO8583
     c.encoder = lambda {|date|
       enc = case date
             when DateTime, Date, Time
-              date.strftime(fmt)
+              do_time_zone_conversion(date).strftime(fmt)
             when String
               begin
                 do_time_parsing do
-                  dt = DateTime.strptime(date, fmt)
-                  dt.strftime(fmt)
-                end
+                  DateTime.strptime(date, fmt)
+                end.strftime(fmt)
               rescue
                 raise ISO8583Exception.new("Invalid format encoding: #{date}, must be #{fmt}.")
               end
