@@ -194,7 +194,7 @@ class FieldTest < Test::Unit::TestCase
     }
 
     assert_equal "10 ", fld.encode("10")
-    assert_equal ["1!", "a"], fld.parse("1! a")
+    assert_equal ["1! ", "a"], fld.parse("1! a")
   end
 
   def test_B

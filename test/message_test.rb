@@ -59,7 +59,7 @@ class MessageTest < Test::Unit::TestCase
     mes[11] = 0
     mes[12] = "740808120000"
     mes[14] = "1010"
-    mes[22] = "POSDATACODE"
+    mes[22] = "POSDATACODE1"
     mes[23] = 0
     mes[24] = 1
     mes[25] = 90
@@ -95,7 +95,7 @@ MTI:1814 (Network Management Request Response Issuer Gateway or Acquirer Gateway
 011                  System Trace Audit Number (STAN) : 0
 012                  Date and Time, Local Transaction : 740808120000
 014                                  Date, Expiration : 1010
-022                                     POS Data Code : POSDATACODE
+022                                     POS Data Code : POSDATACODE1
 023                              Card Sequence Number : 0
 024                                     Function Code : 1
 025                               Message Reason Code : 90
@@ -134,7 +134,7 @@ END
     mes[11] = 0
     mes[12] = "740808120000"
     mes[14] = "1010"
-    mes[22] = "POSDATACODE"
+    mes[22] = "POSDATACODE1"
     mes[23] = 0
     mes[24] = 1
     mes[25] = 90

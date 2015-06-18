@@ -111,7 +111,7 @@ module ISO8583
   }
 
   PASS_THROUGH_DECODER = lambda{|str|
-    str.strip # remove padding
+    str # NOTE there was a strip call here but we prefer the original value
   }
 
   # Takes a number or str representation of a number and BCD encodes it, e.g.
