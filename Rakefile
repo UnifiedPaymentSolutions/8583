@@ -77,14 +77,13 @@ PKG_FILES 	= FileList["lib/**/*.rb", "bin/**/*", "examples/**/*", "[A-Z]*", "tes
 spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = "#{SHORTNAME}: #{DESC}"
-  s.name = SHORTNAME 
+  s.name = SHORTNAME
   s.rubyforge_project = SHORTNAME
   s.version = PKG_VERSION
   s.files = PKG_FILES
   s.requirements << "none"
   s.require_path = "lib"
   s.description = LONG_DESC
-  s.has_rdoc = true
   s.authors = ["Tim Becker", "Slava Kravchenko"]
   s.email = ["tim.becker@kuriositaet.de","cordawyn@gmail.com"]
   s.homepage = "http://github.com/a2800276/8583/"
